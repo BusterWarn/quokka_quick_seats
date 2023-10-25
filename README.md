@@ -116,6 +116,7 @@ SQLite is lightweight and easy to set up.
 
 ### Git and CI
 
+
 - **What it Does**: Automates testing and deployment.
 - **Why We Picked It**: GitHub Actions ([Docs](https://docs.github.com/en/actions)); Git hooks for linting through Credo
 
