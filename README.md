@@ -11,7 +11,27 @@ Users can browse available seats, reserve or cancel a reservation, and get real-
 
 ---
 
-## Tech Stack
+# User Documentation
+
+### Database
+
+Typical steps to set up database are:
+
+1. **Run `mix deps.get`**: To fetch all dependencies.
+2. **Set Up the Database**: `mix ecto.create` to create the database.
+3. **Run Migrations**: `mix ecto.migrate` to apply your migrations and get their database schema in sync with the project.
+
+### Database Documentation and Best Practices
+
+For more detailed information and best practices, you can refer to the official Elixir and Phoenix documentation. Here are some relevant sections:
+
+- [Elixir Ecto Getting Started Guide](https://hexdocs.pm/ecto/getting-started.html): For understanding Ecto basics.
+- [Phoenix Ecto Migrations Guide](https://hexdocs.pm/phoenix/ecto.html#ecto-migrations): Covers how migrations work in Phoenix.
+- [Phoenix Testing Guide](https://hexdocs.pm/phoenix/testing.html): For writing and running tests in Phoenix applications.
+
+These documents provide a wealth of information on using Ecto and Phoenix effectively and are great resources! 🚀👨‍💻📚
+
+# Tech Stack
 
 ### Backend: Elixir + Phoenix
 
