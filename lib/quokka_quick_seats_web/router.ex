@@ -1,4 +1,5 @@
 defmodule QuokkaQuickSeatsWeb.Router do
+  alias QuokkaQuickSeatsWeb.SeatsController
   use QuokkaQuickSeatsWeb, :router
 
   pipeline :api do
@@ -7,6 +8,9 @@ defmodule QuokkaQuickSeatsWeb.Router do
 
   scope "/api", QuokkaQuickSeatsWeb do
     pipe_through :api
+
+    get "/seats", SeatsController, :get_all_seats
+    post "/seats", SeatsController, :add_seat
   end
 
   # Enable LiveDashboard in development
