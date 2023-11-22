@@ -6,7 +6,7 @@ defmodule QuokkaQuickSeatsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", QuokkaQuickSeatsWeb do
+  scope "/api" do
     pipe_through :api
 
     get "/seats", SeatsController, :get_all_seats
