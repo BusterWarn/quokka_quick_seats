@@ -1,6 +1,6 @@
 defmodule QuokkaQuickSeatsWeb.SeatsController do
   @moduledoc """
-
+  
   """
   use QuokkaQuickSeatsWeb, :controller
 
@@ -10,14 +10,21 @@ defmodule QuokkaQuickSeatsWeb.SeatsController do
     IO.puts("get_all_seats")
     text(connection, value)
   end
+
   def get_all_seats(connection, _) do
     IO.puts("get_all_seats")
     json(connection, DatabaseManager.get_all_seats())
   end
 
-  def add_seat(connection, _) do
-    IO.puts("book_seat")
-    DatabaseManager.create_seat("1")
-    text(connection, "no param")
+  def add_seat(conn, %{"seat_id" => seat_id}) do
+    case DatabaseManager.create_seat(seat_id) do
+      {:ok, seat} ->
+        json(conn, seat)
+
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(changeset)
+    end
   end
 end
