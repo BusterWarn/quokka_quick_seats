@@ -1,3 +1,5 @@
+import Phoenix.LiveView.Router
+
 defmodule QuokkaQuickSeatsWeb.Router do
   alias QuokkaQuickSeatsWeb.SeatsController
   use QuokkaQuickSeatsWeb, :router
@@ -6,11 +8,26 @@ defmodule QuokkaQuickSeatsWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :browser do
+    plug :accepts, ["html", "json"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    # plug :put_root_layout, html: {HelloWeb.LayoutView, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
   scope "/api" do
     pipe_through :api
 
     get "/seats", SeatsController, :get_all_seats
     post "/seats", SeatsController, :add_seat
+  end
+
+  scope "/" do
+    pipe_through :browser
+    live "/quokka_quick_seats_show", QuokkaQuickSeatsLive
+    # get "/index", SeatsController, :index
   end
 
   # Enable LiveDashboard in development

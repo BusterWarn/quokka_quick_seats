@@ -7,6 +7,10 @@
 # General application configuration
 import Config
 
+config :phoenix,
+       :template_engines,
+       heex: Phoenix.LiveView.Engine
+
 config :quokka_quick_seats,
   ecto_repos: [QuokkaQuickSeats.Repo],
   generators: [timestamp_type: :utc_datetime]

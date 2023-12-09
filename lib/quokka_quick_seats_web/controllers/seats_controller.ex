@@ -16,15 +16,15 @@ defmodule QuokkaQuickSeatsWeb.SeatsController do
     json(connection, DatabaseManager.get_all_seats())
   end
 
-  def add_seat(conn, %{"seat_id" => seat_id}) do
-    case DatabaseManager.create_seat(seat_id) do
-      {:ok, seat} ->
-        json(conn, seat)
+  def add_seat(connection, _) do
+    IO.puts("book_seat")
+    DatabaseManager.create_seat("1")
+    text(connection, "no param")
+  end
 
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> json(changeset)
-    end
+  def index(conn, _params) do
+    IO.puts("Loading index HTML")
+    seats = DatabaseManager.get_all_seats()
+    render(conn, "index.html", seats: seats)
   end
 end

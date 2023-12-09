@@ -2,16 +2,16 @@ defmodule QuokkaQuickSeatsWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
-
+  
   This can be used in your application as:
-
+  
       use QuokkaQuickSeatsWeb, :controller
       use QuokkaQuickSeatsWeb, :html
-
+  
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
   on imports, uses and aliases.
-
+  
   Do NOT define functions inside the quoted expressions
   below. Instead, define additional modules and import
   those modules here.
@@ -26,6 +26,7 @@ defmodule QuokkaQuickSeatsWeb do
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
@@ -43,6 +44,65 @@ defmodule QuokkaQuickSeatsWeb do
 
       import Plug.Conn
 
+      unquote(verified_routes())
+    end
+  end
+
+  def view do
+    quote do
+      use Phoenix.View,
+        root: "lib/quokka_quick_seats_web/templates",
+        namespace: QuokkaQuickSeatsWeb
+
+      # Import convenience functions from the web module
+      import QuokkaQuickSeatsWeb.Router.Helpers
+      import QuokkaQuickSeatsWeb.Gettext
+      # other imports and functionality ...
+    end
+  end
+
+  def live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {QuokkaQuickSeatsWeb.Layouts, :app}
+
+      unquote(html_helpers())
+    end
+  end
+
+  def live_component do
+    quote do
+      use Phoenix.LiveComponent
+
+      unquote(html_helpers())
+    end
+  end
+
+  def html do
+    quote do
+      use Phoenix.Component
+
+      # Import convenience functions from controllers
+      import Phoenix.Controller,
+        only: [get_csrf_token: 0, view_module: 1, view_template: 1]
+
+      # Include general helpers for rendering HTML
+      unquote(html_helpers())
+    end
+  end
+
+  defp html_helpers do
+    quote do
+      # HTML escaping functionality
+      import Phoenix.HTML
+      # Core UI components and translation
+      import QuokkaQuickSeatsWeb.CoreComponents
+      import QuokkaQuickSeatsWeb.Gettext
+
+      # Shortcut for generating JS commands
+      alias Phoenix.LiveView.JS
+
+      # Routes generation with the ~p sigil
       unquote(verified_routes())
     end
   end

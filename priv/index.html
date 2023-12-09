@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Booking</title>
+    <style>
+        #seatContainer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Adjust based on the number of columns */
+            gap: 10px;
+        }
+
+        .seat {
+            width: 50px;
+            height: 50px;
+            background-color: green;
+            border: 1px solid black;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .booked {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="seatContainer">
+        <!-- Seats will be loaded here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const seatData = [
+                {"id":1,"seat_id":"A1","is_booked":false,"phone_number":null,"full_name":null},
+                {"id":2,"seat_id":"A2","is_booked":false,"phone_number":null,"full_name":null},
+                // ... Add all seat data here
+            ];
+
+            const seatContainer = document.getElementById('seatContainer');
+
+            seatData.forEach(seat => {
+                const seatDiv = document.createElement('div');
+                seatDiv.classList.add('seat');
+                if (seat.is_booked) {
+                    seatDiv.classList.add('booked');
+                }
+                seatDiv.textContent = seat.seat_id;
+                seatDiv.addEventListener('click', () => {
+                    seatDiv.classList.toggle('booked');
+                    // Add your booking logic here
+                });
+                seatContainer.appendChild(seatDiv);
+            });
+        });
+    </script>
+</body>
+</html>
