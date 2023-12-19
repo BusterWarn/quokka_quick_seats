@@ -42,12 +42,30 @@
                 min-width: 196px;
             }
         }
+
+        .seat-tooltip {
+            position: absolute;
+            background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-family: Phantomsans, sans-serif;
+            text-align: center;
+            z-index: 1000;
+            pointer-events: none; /* Make the tooltip ignore mouse events */
+        }
     </style>
 </head>
 <body>
+  <div id="seatTooltip" class="seat-tooltip" style="display: none;"></div>
     <div class="container">
         <div class="row justify-content-center my-5">
             <button class="button-63" id="getAllSeats" role="button">Get All Seats</button>
+        </div>
+        <div class="row justify-content-center my-3">
+            <input type="text" id="fullName" placeholder="Full Name" class="form-control mx-2" style="max-width: 200px;">
+            <input type="text" id="phoneNumber" placeholder="Phone Number" class="form-control mx-2" style="max-width: 200px;">
         </div>
         <div class="row justify-content-center" id="seatContainer">
             <!-- Buttons will be added here -->
@@ -62,31 +80,66 @@
               .then(response => response.json())
               .then(seatData => {
                   const seatContainer = document.getElementById('seatContainer');
-                  seatContainer.innerHTML = ''; // Clear previous buttons
+                  seatContainer.innerHTML = '';
 
                   seatData.forEach(seat => {
                       const btn = document.createElement('button');
                       btn.className = 'btn seat-button ' + (seat.is_booked ? 'booked' : 'btn-primary');
                       btn.textContent = seat.seat_id;
-                      btn.addEventListener('click', () => bookSeat(seat));
+
+                      // Add title attribute for booked seats
+                      if (seat.is_booked) {
+                          // btn.title = `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`;
+                          btn.onmouseenter = function(event) {
+                              showTooltip(event, `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`);
+                          };
+                          btn.onmouseleave = function() {
+                              hideTooltip();
+                          };
+                      }
+
+                      btn.addEventListener('click', () => bookSeat(seat.seat_id));
                       seatContainer.appendChild(btn);
                   });
               })
               .catch(error => console.error('Error:', error));
       }
 
-      function bookSeat(seat) {
-          if (!seat.is_booked) {
-              fetch('http://localhost:4004/api/bookSeat/' + seat.id, { method: 'POST' })
-                  .then(response => {
-                      if(response.ok) {
-                          loadSeats(); // Reload all seats after booking
-                      }
-                  })
-                  .catch(error => console.error('Error booking seat:', error));
-          } else {
-              console.log(`Seat ${seat.seat_id} is already booked.`);
-          }
+      function showTooltip(event, text) {
+          const tooltip = document.getElementById('seatTooltip');
+          tooltip.textContent = text;
+          tooltip.style.display = 'block';
+          tooltip.style.left = event.clientX + 'px';
+          tooltip.style.top = event.clientY + 'px';
+      }
+
+      function hideTooltip() {
+          document.getElementById('seatTooltip').style.display = 'none';
+      }
+
+      function bookSeat(seatId) {
+          const fullName = document.getElementById('fullName').value || "Mr Quokk";
+          const phoneNumber = document.getElementById('phoneNumber').value || "070";
+
+          const requestBody = {
+              seat_id: seatId,
+              full_name: fullName,
+              phone_number: phoneNumber
+          };
+
+          fetch('http://localhost:4004/api/book_seat', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestBody)
+          })
+          .then(response => {
+              if(response.ok) {
+                  loadSeats(); // Reload all seats after booking
+              }
+          })
+          .catch(error => console.error('Error booking seat:', error));
       }
 
       // Initial load of seats

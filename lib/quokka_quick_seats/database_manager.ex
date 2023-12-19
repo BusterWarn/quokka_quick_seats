@@ -23,6 +23,29 @@ defmodule QuokkaQuickSeats.DatabaseManager do
     |> Repo.insert()
   end
 
+  def book_seat(seat_id, full_name, phone_number) do
+    seat = Repo.get_by(SeatSchema, seat_id: seat_id)
+
+    if seat do
+      changeset =
+        SeatSchema.changeset(seat, %{
+          is_booked: true,
+          full_name: full_name,
+          phone_number: phone_number
+        })
+
+      case Repo.update(changeset) do
+        {:ok, seat} ->
+          {:ok, convert_seat_to_map(seat)}
+
+        {:error, changeset} ->
+          {:error, changeset}
+      end
+    else
+      {:error, "Seat #{seat_id} not found"}
+    end
+  end
+
   defp convert_seat_to_map(nil), do: nil
 
   defp convert_seat_to_map(seat) do
