@@ -10,6 +10,7 @@ defmodule QuokkaQuickSeatsWeb.Router do
     pipe_through :api
 
     get "/seats", SeatsController, :get_all_seats
+    get "/seats/:id", SeatsController, :get_seat
     post "/seats", SeatsController, :add_seat
   end
 
