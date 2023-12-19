@@ -6,12 +6,22 @@ defmodule QuokkaQuickSeatsWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :browser do
+    plug :accepts, ["html"]
+  end
+
   scope "/api" do
     pipe_through :api
 
     get "/seats", SeatsController, :get_all_seats
     get "/seats/:id", SeatsController, :get_seat
     post "/seats", SeatsController, :add_seat
+  end
+
+  scope "/", QuokkaQuickSeatsWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
   end
 
   # Enable LiveDashboard in development
