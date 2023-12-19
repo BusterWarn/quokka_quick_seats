@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Booking</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Your CSS goes here */
+        .button-63 {
+            align-items: center;
+            background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+            border: 0;
+            border-radius: 8px;
+            box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            display: flex;
+            font-family: Phantomsans, sans-serif;
+            font-size: 20px;
+            justify-content: center;
+            line-height: 1em;
+            max-width: 100%;
+            min-width: 140px;
+            padding: 19px 24px;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .button-63:active,
+        .button-63:hover {
+            outline: 0;
+        }
+
+        @media (min-width: 768px) {
+            .button-63 {
+                font-size: 24px;
+                min-width: 196px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center my-5">
+            <button class="button-63" id="getAllSeats" role="button">Get All Seats</button>
+        </div>
+        <div class="row justify-content-center" id="seatContainer">
+            <!-- Buttons will be added here -->
+        </div>
+    </div>
+
+  <script>
+      document.getElementById('getAllSeats').addEventListener('click', loadSeats);
+
+      function loadSeats() {
+          fetch('http://localhost:4004/api/seats')
+              .then(response => response.json())
+              .then(seatData => {
+                  const seatContainer = document.getElementById('seatContainer');
+                  seatContainer.innerHTML = ''; // Clear previous buttons
+
+                  seatData.forEach(seat => {
+                      const btn = document.createElement('button');
+                      btn.className = 'btn seat-button ' + (seat.is_booked ? 'booked' : 'btn-primary');
+                      btn.textContent = seat.seat_id;
+                      btn.addEventListener('click', () => bookSeat(seat));
+                      seatContainer.appendChild(btn);
+                  });
+              })
+              .catch(error => console.error('Error:', error));
+      }
+
+      function bookSeat(seat) {
+          if (!seat.is_booked) {
+              fetch('http://localhost:4004/api/bookSeat/' + seat.id, { method: 'POST' })
+                  .then(response => {
+                      if(response.ok) {
+                          loadSeats(); // Reload all seats after booking
+                      }
+                  })
+                  .catch(error => console.error('Error booking seat:', error));
+          } else {
+              console.log(`Seat ${seat.seat_id} is already booked.`);
+          }
+      }
+
+      // Initial load of seats
+      loadSeats();
+  </script>
+</body>
+</html>
