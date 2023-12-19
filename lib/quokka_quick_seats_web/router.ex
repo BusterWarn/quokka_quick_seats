@@ -16,6 +16,7 @@ defmodule QuokkaQuickSeatsWeb.Router do
     get "/seats", SeatsController, :get_all_seats
     get "/seats/:id", SeatsController, :get_seat
     post "/seats", SeatsController, :add_seat
+    post "/book_seat", SeatsController, :book_seat
   end
 
   scope "/", QuokkaQuickSeatsWeb do

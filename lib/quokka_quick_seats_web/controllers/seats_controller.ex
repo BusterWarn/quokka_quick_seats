@@ -33,4 +33,20 @@ defmodule QuokkaQuickSeatsWeb.SeatsController do
         |> json(changeset)
     end
   end
+
+  def book_seat(conn, %{
+        "seat_id" => seat_id,
+        "full_name" => full_name,
+        "phone_number" => phone_number
+      }) do
+    case DatabaseManager.book_seat(seat_id, full_name, phone_number) do
+      {:ok, seat} ->
+        json(conn, seat)
+
+      {:error, reason} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{error: reason})
+    end
+  end
 end
