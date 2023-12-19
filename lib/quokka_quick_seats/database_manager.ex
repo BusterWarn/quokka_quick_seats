@@ -12,8 +12,9 @@ defmodule QuokkaQuickSeats.DatabaseManager do
     |> Enum.map(&convert_seat_to_map/1)
   end
 
-  def get_seat(seat_id) do
+  def get_seat(seat_id) when is_binary(seat_id) do
     Repo.get_by(SeatSchema, seat_id: seat_id)
+    |> convert_seat_to_map
   end
 
   def create_seat(seat_id) when is_binary(seat_id) do
@@ -21,6 +22,8 @@ defmodule QuokkaQuickSeats.DatabaseManager do
     |> SeatSchema.changeset(%{})
     |> Repo.insert()
   end
+
+  defp convert_seat_to_map(nil), do: nil
 
   defp convert_seat_to_map(seat) do
     %{
