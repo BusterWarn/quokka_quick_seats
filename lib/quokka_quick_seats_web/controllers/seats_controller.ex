@@ -39,14 +39,29 @@ defmodule QuokkaQuickSeatsWeb.SeatsController do
         "full_name" => full_name,
         "phone_number" => phone_number
       }) do
-    case DatabaseManager.book_seat(seat_id, full_name, phone_number) do
-      {:ok, seat} ->
-        json(conn, seat)
+    if is_seat_free(seat_id) do
+      DatabaseManager.unbook_by_name(full_name)
 
-      {:error, reason} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> json(%{error: reason})
+      case DatabaseManager.book_seat(seat_id, full_name, phone_number) do
+        {:ok, seat} ->
+          json(conn, seat)
+
+        {:error, reason} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> json(%{error: reason})
+      end
+    else
+      conn
+      |> put_status(:unprocessable_entity)
+      |> json(%{error: "Seat #{seat_id} already booked"})
+    end
+  end
+
+  defp is_seat_free(seat_id) when is_binary(seat_id) do
+    case DatabaseManager.get_seat(seat_id) do
+      nil -> false
+      seat -> not seat.is_booked
     end
   end
 end
