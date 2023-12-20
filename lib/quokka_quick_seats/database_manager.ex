@@ -3,6 +3,7 @@ defmodule QuokkaQuickSeats.DatabaseManager do
   This is a manager fo the Database
   """
 
+  import Ecto.Query
   alias QuokkaQuickSeats.SeatSchema
   alias QuokkaQuickSeats.Repo
 
@@ -44,6 +45,42 @@ defmodule QuokkaQuickSeats.DatabaseManager do
     else
       {:error, "Seat #{seat_id} not found"}
     end
+  end
+
+  def unbook_by_name(full_name) when is_binary(full_name) do
+    seats =
+      from(s in SeatSchema, where: s.full_name == ^full_name)
+      |> Repo.all()
+
+    Enum.each(seats, fn seat ->
+      changeset =
+        SeatSchema.changeset(seat, %{
+          is_booked: false,
+          full_name: "",
+          phone_number: ""
+        })
+
+      case Repo.update(changeset) do
+        {:ok, _seat} ->
+          IO.puts("Successfully unbooked seat #{seat.seat_id} for #{full_name}")
+
+        {:error, _changeset} ->
+          IO.puts("Could not unbook seat #{seat.seat_id} for #{full_name}")
+      end
+    end)
+  end
+
+  def unbook_all_seats do
+    Repo.transaction(fn ->
+      from(s in SeatSchema)
+      |> Repo.update_all(
+        set: [
+          is_booked: false,
+          phone_number: nil,
+          full_name: nil
+        ]
+      )
+    end)
   end
 
   defp convert_seat_to_map(nil), do: nil
