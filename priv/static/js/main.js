@@ -1,4 +1,8 @@
-document.getElementById('getAllSeats').addEventListener('click', loadSeats);
+
+const CLASS_ALERT_INFO = "alert_info";
+const CLASS_ALERT_SUCCESS = "alert_success";
+const CLASS_ALERT_WARNING = "alert_warning";
+const CLASS_ALERT_DANGER = "alert_danger";
 
 function loadSeats() {
     fetch('http://localhost:4004/api/seats')
@@ -60,13 +64,82 @@ function bookSeat(seatId) {
         body: JSON.stringify(requestBody)
     })
     .then(response => {
-        if(response.ok) {
+        console.log("then");
+        if (response.ok) {
+            display_success("Succesfully booked seat '" + seatId + "'!");
             loadSeats(); // Reload all seats after booking
         }
+        else
+        {
+          display_warning("Could not book seat '" + seatId + "'")
+          console.log(response);
+        }
     })
-    .catch(error => console.error('Error booking seat:', error));
+    .catch(error => {
+        display_danger("Error: " + error);
+    });
 }
 
-// Initial load of seats
-loadSeats();
+// Alerts
 
+function alert_show(alert_style = CLASS_ALERT_INFO, message = "") {
+
+  alert_el = document.getElementById("qqs_alert");
+  if (!alert_el) {
+    console.error("Could not get alert element!");
+    return;
+  }
+
+  if (!alert_el.childNodes[9]) {
+    console.error("Could not get alert inner message element!");
+    return;
+  }
+  alert_el.childNodes[9].innerHTML = message;
+
+  alert_el.classList.remove("alert_info");
+  alert_el.classList.remove("alert_success");
+  alert_el.classList.remove("alert_warning");
+  alert_el.classList.remove("alert_danger");
+  alert_el.classList.add(alert_style);
+
+  alert_el.classList.add("show");
+  alert_el.classList.remove("hide");
+  alert_el.classList.add("showAlert");
+  
+  setTimeout(function(){ alert_close() }, 5000);
+}
+
+function alert_close() {
+  alert_el = document.getElementById("qqs_alert");
+  alert_el.classList.remove("show");
+  alert_el.classList.add("hide");
+}
+
+function display_info(message) {
+
+  console.log("Info message: " + message);
+  alert_show(CLASS_ALERT_INFO, message);
+}
+
+function display_success(message) {
+  
+  console.log("Success message: " + message);
+  alert_show(CLASS_ALERT_SUCCESS, message);
+}
+
+function display_warning(message) {
+  
+  console.warn("Warning message: " + message);
+  alert_show(CLASS_ALERT_WARNING, message);
+}
+
+function display_danger(message) {
+
+  console.error("Danger message: " + message);
+  alert_show(CLASS_ALERT_DANGER, message);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('getAllSeats').addEventListener('click', loadSeats);
+    loadSeats();
+});
