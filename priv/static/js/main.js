@@ -1,17 +1,17 @@
-
+const URL = "http://localhost:4004/"
 const CLASS_ALERT_INFO = "alert_info";
 const CLASS_ALERT_SUCCESS = "alert_success";
 const CLASS_ALERT_WARNING = "alert_warning";
 const CLASS_ALERT_DANGER = "alert_danger";
 
-function loadSeats() {
-    fetch('http://localhost:4004/api/seats')
+function load_all_seats() {
+    fetch(URL + "api/seats")
         .then(response => response.json())
-        .then(seatData => {
-            const seatContainer = document.getElementById('seatContainer');
-            seatContainer.innerHTML = '';
+        .then(seat_data => {
+            const seat_container = document.getElementById("seat_container");
+            seat_container.innerHTML = '';
 
-            seatData.forEach(seat => {
+            seat_data.forEach(seat => {
                 const btn = document.createElement('button');
                 btn.className = 'btn seat-button ' + (seat.is_booked ? 'booked' : 'btn-primary');
                 btn.textContent = seat.seat_id;
@@ -20,43 +20,43 @@ function loadSeats() {
                 if (seat.is_booked) {
                     // btn.title = `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`;
                     btn.onmouseenter = function(event) {
-                        showTooltip(event, `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`);
+                        show_tooltip(event, `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`);
                     };
                     btn.onmouseleave = function() {
-                        hideTooltip();
+                        hide_tooltip();
                     };
                 }
 
-                btn.addEventListener('click', () => bookSeat(seat.seat_id));
-                seatContainer.appendChild(btn);
+                btn.addEventListener('click', () => book_seat(seat.seat_id));
+                seat_container.appendChild(btn);
             });
         })
         .catch(error => console.error('Error:', error));
 }
 
-function showTooltip(event, text) {
-    const tooltip = document.getElementById('seatTooltip');
+function show_tooltip(event, text) {
+    const tooltip = document.getElementById('seat_tooltip');
     tooltip.textContent = text;
     tooltip.style.display = 'block';
     tooltip.style.left = event.clientX + 'px';
     tooltip.style.top = event.clientY + 'px';
 }
 
-function hideTooltip() {
-    document.getElementById('seatTooltip').style.display = 'none';
+function hide_tooltip() {
+    document.getElementById('seat_tooltip').style.display = 'none';
 }
 
-function bookSeat(seatId) {
-    const fullName = document.getElementById('fullName').value || "Mr Quokk";
-    const phoneNumber = document.getElementById('phoneNumber').value || "070";
+function book_seat(seat_id) {
+    const full_name = document.getElementById('full_name').value || "Mr Quokk";
+    const phone_number = document.getElementById('phone_number').value || "070";
 
     const requestBody = {
-        seat_id: seatId,
-        full_name: fullName,
-        phone_number: phoneNumber
+        seat_id: seat_id,
+        full_name: full_name,
+        phone_number: phone_number
     };
 
-    fetch('http://localhost:4004/api/book_seat', {
+    fetch(URL + "api/book_seat", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -64,14 +64,13 @@ function bookSeat(seatId) {
         body: JSON.stringify(requestBody)
     })
     .then(response => {
-        console.log("then");
         if (response.ok) {
-            display_success("Succesfully booked seat '" + seatId + "'!");
-            loadSeats(); // Reload all seats after booking
+            display_success("Succesfully booked seat '" + seat_id + "'!");
+            load_all_seats(); // Reload all seats after booking
         }
         else
         {
-          display_warning("Could not book seat '" + seatId + "'")
+          display_warning("Could not book seat '" + seat_id + "'")
           console.log(response);
         }
     })
@@ -140,6 +139,6 @@ function display_danger(message) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('getAllSeats').addEventListener('click', loadSeats);
-    loadSeats();
+    document.getElementById('get_all_seats').addEventListener('click', load_all_seats);
+    load_all_seats();
 });
