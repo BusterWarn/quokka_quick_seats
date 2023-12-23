@@ -68,3 +68,199 @@ body {
     pointer-events: none; /* Make the tooltip ignore mouse events */
 }
 
+/* Alerts */
+
+#qqs_alert {
+  padding: 20px 40px;
+  min-width: 420px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  border-radius: 4px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#qqs_alert .fa-info,
+#qqs_alert .fa-check,
+#qqs_alert .fa-exclamation-circle,
+#qqs_alert .fa-exclamation-triangle {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  display: none;
+}
+
+#qqs_alert .msg {
+  padding: 0 20px;
+  font-size: 18px;
+}
+
+#qqs_alert .close-btn {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 20px 18px;
+  cursor: pointer;
+}
+
+#qqs_alert .close-btn .fas {
+  font-size: 22px;
+  line-height: 40px;
+}
+
+#qqs_alert.showAlert {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Alert INFO */
+
+#qqs_alert.alert_info {
+  background: #BBDEFB; /* color 0 */
+  border-left: 8px solid #2196F3; /* color 1*/
+}
+
+#qqs_alert.alert_info .fa-info {
+  color: #2196F3; /* color 1*/
+  display: inline;
+}
+
+#qqs_alert.alert_info .msg {
+  color: #2196F3; /* color 1*/
+}
+
+#qqs_alert.alert_info .close-btn {
+  background: #64B5F6; /* color 2 */
+}
+
+#qqs_alert.alert_info .close-btn:hover {
+  background: #42A5F5; /* color 3 */
+}
+
+#qqs_alert.alert_info .close-btn .fas {
+  color: #2196F3; /* color 1 */
+}
+
+/* Alert SUCCESS */
+
+#qqs_alert.alert_success {
+  background: #C8E6C9; /* color 0 */
+  border-left: 8px solid #4CAF50; /* color 1*/
+}
+
+#qqs_alert.alert_success .fa-check {
+  color: #4CAF50; /* color 1*/
+  display: inline;
+}
+
+#qqs_alert.alert_success .msg {
+  color: #4CAF50; /* color 1*/
+}
+
+#qqs_alert.alert_success .close-btn {
+  background: #81C784; /* color 2 */
+}
+
+#qqs_alert.alert_success .close-btn:hover {
+  background: #66BB6A; /* color 3 */
+}
+
+#qqs_alert.alert_success .close-btn .fas {
+  color: #4CAF50; /* color 1 */
+}
+
+/* Alert WARNING */
+
+#qqs_alert.alert_warning {
+  background: #FFE0B2; /* color 0 */
+  border-left: 8px solid #FF9800; /* color 1*/
+}
+
+#qqs_alert.alert_warning .fa-exclamation-circle {
+  color: #FF9800; /* color 1*/
+  display: inline;
+}
+
+#qqs_alert.alert_warning .msg {
+  color: #FF9800; /* color 1*/
+}
+
+#qqs_alert.alert_warning .close-btn {
+  background: #FFCC80; /* color 2 */
+}
+
+#qqs_alert.alert_warning .close-btn:hover {
+  background: #FFB74D; /* color 3 */
+}
+
+#qqs_alert.alert_warning .close-btn .fas {
+  color: #FF9800; /* color 1 */
+}
+
+/* Alert DANGER */
+
+#qqs_alert.alert_danger {
+  background: #FFCDD2; /* color 0 */
+  border-left: 8px solid #F44336; /* color 1*/
+}
+
+#qqs_alert.alert_danger .fa-exclamation-triangle {
+  color: #F44336; /* color 1*/
+  display: inline;
+}
+
+#qqs_alert.alert_danger .msg {
+  color: #F44336; /* color 1*/
+}
+
+#qqs_alert.alert_danger .close-btn {
+  background: #E57373; /* color 2 */
+}
+
+#qqs_alert.alert_danger .close-btn:hover {
+  background: #EF5350; /* color 3 */
+}
+
+#qqs_alert.alert_danger .close-btn .fas {
+  color: #F44336; /* color 1 */
+}
+
+@keyframes show_slide {
+  0%{
+    transform: translateX(100%);
+  }
+  40%{
+    transform: translateX(-10%);
+  }
+  80%{
+    transform: translateX(0%);
+  }
+  100%{
+    transform: translateX(-10px);
+  }
+}
+
+#qqs_alert.hide {
+  animation: hide_slide 1s ease forwards;
+}
+
+@keyframes hide_slide {
+  0%{
+    transform: translateX(-10px);
+  }
+  40%{
+    transform: translateX(0%);
+  }
+  80%{
+    transform: translateX(-10%);
+  }
+  100%{
+    transform: translateX(100%);
+  }
+}
+
