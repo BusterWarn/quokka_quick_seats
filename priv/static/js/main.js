@@ -13,11 +13,19 @@ function load_all_seats() {
 
             seat_data.forEach(seat => {
                 const btn = document.createElement('button');
-                btn.className = 'btn seat-button ' + (seat.is_booked ? 'booked' : 'btn-primary');
+                btn.className = 'btn seat-button button-63 ' + (seat.is_booked ? 'booked' : 'btn-primary');
                 btn.textContent = seat.seat_id;
 
                 // Add title attribute for booked seats
                 if (seat.is_booked) {
+                    if (seat.full_name === get_name())
+                    {
+                        btn.className += ' color_blue'
+                    }
+                    else
+                    {
+                        btn.className += ' color_booked_seat'
+                    }
                     // btn.title = `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`;
                     btn.onmouseenter = function(event) {
                         show_tooltip(event, `Name: ${seat.full_name}\nPhone: ${seat.phone_number}`);
@@ -26,7 +34,10 @@ function load_all_seats() {
                         hide_tooltip();
                     };
                 }
-
+                else
+                {
+                    btn.className += ' color_available_seat'
+                }
                 btn.addEventListener('click', () => book_seat(seat.seat_id));
                 seat_container.appendChild(btn);
             });
@@ -46,8 +57,13 @@ function hide_tooltip() {
     document.getElementById('seat_tooltip').style.display = 'none';
 }
 
+function get_name()
+{
+    return document.getElementById('full_name').value || "Mr Quokk";
+}
+
 function book_seat(seat_id) {
-    const full_name = document.getElementById('full_name').value || "Mr Quokk";
+    const full_name = get_name();
     const phone_number = document.getElementById('phone_number').value || "070";
 
     const requestBody = {
