@@ -1376,8 +1376,11 @@
             btn.className += " color_booked_seat";
           }
           btn.onmouseenter = function(event) {
-            show_tooltip(event, `Name: ${seat.full_name}
-Phone: ${seat.phone_number}`);
+            show_tooltip(
+              event,
+              `Name: ${seat.full_name}
+Phone: ${seat.phone_number}`
+            );
           };
           btn.onmouseleave = function() {
             hide_tooltip();
@@ -1401,11 +1404,22 @@ Phone: ${seat.phone_number}`);
     document.getElementById("seat_tooltip").style.display = "none";
   }
   function get_name() {
-    return document.getElementById("full_name").value || "Mr Quokk";
+    return document.getElementById("full_name").value || "";
+  }
+  function get_phone_number() {
+    return document.getElementById("phone_number").value || "";
   }
   function book_seat(seat_id) {
     const full_name = get_name();
-    const phone_number = document.getElementById("phone_number").value || "070";
+    const phone_number = get_phone_number();
+    if (full_name == "") {
+      display_warning("Please input full name");
+      return;
+    }
+    if (!is_valid_swedish_phone_number(phone_number)) {
+      display_warning("Not a valid phone number: '" + phone_number + "''");
+      return;
+    }
     const requestBody = {
       seat_id,
       full_name,
@@ -1427,20 +1441,46 @@ Phone: ${seat.phone_number}`);
           console.log("Unable to book", resp);
         });
       } else {
-        display_warning("Could not book seat '" + seat_id + "'");
         console.log(response);
+        display_warning(
+          response.status + ": Could not book seat '" + seat_id + "'"
+        );
       }
     }).catch((error) => {
+      console.log("Big error");
       display_danger("Error: " + error);
     });
   }
+  function is_valid_swedish_phone_number(phoneNumber) {
+    const regex = /^(?:\+46|0046|0)\d{6,10}$/;
+    return regex.test(phoneNumber);
+  }
   document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("get_all_seats").addEventListener("click", load_all_seats);
+    document.getElementById("get_all_seats").addEventListener(
+      "click",
+      load_all_seats
+    );
     load_all_seats();
     channel = connect_to_socket();
     channel.on("seat_booked", () => {
       console.log("Reload all seats broadcasted from server");
       load_all_seats();
     });
+  });
+  document.getElementById("phone_number").addEventListener("input", function() {
+    const phoneNumber = this.value;
+    if (is_valid_swedish_phone_number(phoneNumber)) {
+      this.style.borderColor = "green";
+    } else {
+      this.style.borderColor = "red";
+    }
+  });
+  document.getElementById("full_name").addEventListener("input", function() {
+    const full_name = this.value;
+    if (full_name != "") {
+      this.style.borderColor = "green";
+    } else {
+      this.style.borderColor = "red";
+    }
   });
 })();
