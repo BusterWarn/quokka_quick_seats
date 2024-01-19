@@ -13,6 +13,10 @@ Users can browse available seats, reserve or cancel a reservation, and get real-
 
 # User Documentation
 
+## Run
+1. mix esbuild default
+2. mix phx.server
+
 ### Database
 
 Typical steps to set up database are:

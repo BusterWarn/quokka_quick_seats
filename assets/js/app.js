@@ -1,8 +1,12 @@
+import {connect_to_socket} from "./booking_socket.js"
+
 const URL = "http://localhost:4004/"
 const CLASS_ALERT_INFO = "alert_info";
 const CLASS_ALERT_SUCCESS = "alert_success";
 const CLASS_ALERT_WARNING = "alert_warning";
 const CLASS_ALERT_DANGER = "alert_danger";
+
+let channel = null;
 
 function load_all_seats() {
     fetch(URL + "api/seats")
@@ -71,6 +75,10 @@ function book_seat(seat_id) {
         full_name: full_name,
         phone_number: phone_number
     };
+    
+    channel.push("book_seat", {"seat_id" : seat_id})
+        .receive("ok", resp => { console.log("Booked successfully", resp) })
+        .receive("error", resp => { console.log("Unable to book", resp) })
 
     fetch(URL + "api/book_seat", {
         method: 'POST',
@@ -157,4 +165,8 @@ function display_danger(message) {
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('get_all_seats').addEventListener('click', load_all_seats);
     load_all_seats();
+
+    channel = connect_to_socket();
+    channel.on("seat_booked", () => {
+        load_all_seats();});
 });
