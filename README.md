@@ -14,8 +14,8 @@ Users can browse available seats, reserve or cancel a reservation, and get real-
 # User Documentation
 
 ## Run
-1. mix esbuild default
-2. mix phx.server
+1. mix esbuild default  # Will build the .js files
+2. mix phx.server       # Start the Phoenix server
 
 ### Database
 
