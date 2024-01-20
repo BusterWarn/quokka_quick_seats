@@ -5,13 +5,13 @@ defmodule QuokkaQuickSeatsWeb.BookingChannelTest do
     {:ok, _, socket} =
       QuokkaQuickSeatsWeb.UserSocket
       |> socket("user_id", %{some: :assign})
-      |> subscribe_and_join(QuokkaQuickSeatsWeb.BookingChannel, "booking:lobby")
+      |> subscribe_and_join(QuokkaQuickSeatsWeb.BookingChannel, "booking:0")
 
     %{socket: socket}
   end
 
   test "ping replies with status ok", %{socket: socket} do
-    ref = push(socket, "ping", %{"hello" => "there"})
+    ref = push(socket, "book_seat", %{"hello" => "there"})
     assert_reply ref, :ok, %{"hello" => "there"}
   end
 
