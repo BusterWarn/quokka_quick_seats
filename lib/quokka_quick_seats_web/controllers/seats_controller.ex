@@ -1,6 +1,6 @@
 defmodule QuokkaQuickSeatsWeb.SeatsController do
   @moduledoc """
-  
+
   """
   use QuokkaQuickSeatsWeb, :controller
 
@@ -44,6 +44,7 @@ defmodule QuokkaQuickSeatsWeb.SeatsController do
 
       case DatabaseManager.book_seat(seat_id, full_name, phone_number) do
         {:ok, seat} ->
+          IO.puts("Seat booked in controller")
           json(conn, seat)
 
         {:error, reason} ->
