@@ -10,6 +10,7 @@ defmodule QuokkaQuickSeatsWeb.BookingChannel do
   # by sending replies to requests from the client
   @impl true
   def handle_in("book_seat", payload, socket) do
+    IO.puts("Seat booked in channel")
     broadcast(socket, "seat_booked", payload)
     {:reply, {:ok, payload}, socket}
   end

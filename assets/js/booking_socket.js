@@ -12,7 +12,7 @@ export function connect_to_socket() {
     let socket = new Socket("/socket", {})
 
     socket.connect()
-    
+
     let channel = socket.channel("booking:0", {})
     channel.join()
       .receive("ok", resp => { alert("Joined successfully", resp) })
