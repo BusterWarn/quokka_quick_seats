@@ -2,7 +2,7 @@ defmodule QuokkaQuickSeatsWeb.BookingChannel do
   use QuokkaQuickSeatsWeb, :channel
 
   @impl true
-  def join("booking:0", payload, socket) do
+  def join("booking:0", _payload, socket) do
     {:ok, socket}
   end
 

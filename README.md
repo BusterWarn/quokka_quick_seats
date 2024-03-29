@@ -35,6 +35,25 @@ For more detailed information and best practices, you can refer to the official 
 
 These documents provide a wealth of information on using Ecto and Phoenix effectively and are great resources! 🚀👨‍💻📚
 
+### Frontend
+
+First time starting up, frontend assets should be built automatically. To rebuild fronend is quite easy:
+```shell
+quokka_quick_seats> mix esbuild default
+
+  ..\priv\static\assets\app.js  44.9kb
+
+⚡ Done in 7ms
+
+quokka_quick_seats> mix phx.digest
+Check your digested files at "priv/static"
+```
+
+To remove all static assets run:
+```shell
+mix phx.digest.clean --all
+```
+
 # Tech Stack
 
 ### Backend: Elixir + Phoenix

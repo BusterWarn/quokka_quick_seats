@@ -1292,28 +1292,13 @@
     }
   };
 
-  // js/booking_socket.js
-  function connect_to_socket() {
-    console.log("Connection to socket");
-    let socket = new Socket("/socket", {});
-    socket.connect();
-    let channel2 = socket.channel("booking:0", {});
-    channel2.join().receive("ok", (resp) => {
-      alert("Joined successfully", resp);
-    }).receive("error", (resp) => {
-      alert("Unable to join", resp);
-    });
-    return channel2;
-  }
-
   // js/alerts.js
   var CLASS_ALERT_INFO = "alert_info";
   var CLASS_ALERT_SUCCESS = "alert_success";
   var CLASS_ALERT_WARNING = "alert_warning";
   var CLASS_ALERT_DANGER = "alert_danger";
   function alert_show(alert_style = CLASS_ALERT_INFO, message = "") {
-    return;
-    alert_el = document.getElementById("qqs_alert");
+    const alert_el = document.getElementById("qqs_alert");
     if (!alert_el) {
       console.error("Could not get alert element!");
       return;
@@ -1336,7 +1321,7 @@
     }, 5e3);
   }
   function alert_close() {
-    alert_el = document.getElementById("qqs_alert");
+    const alert_el = document.getElementById("qqs_alert");
     alert_el.classList.remove("show");
     alert_el.classList.add("hide");
   }
@@ -1351,6 +1336,26 @@
   function display_danger(message) {
     console.error("Danger message: " + message);
     alert_show(CLASS_ALERT_DANGER, message);
+  }
+
+  // js/booking_socket.js
+  function connect_to_socket() {
+    console.log("Connection to socket");
+    const socket = new Socket("/socket", {});
+    socket.connect();
+    const channel2 = socket.channel("booking:0", {});
+    channel2.join().receive("ok", (resp) => {
+      console.log(
+        "Successfully joined live session. Seats reservations will be updated automatically."
+      );
+      console.log(resp);
+    }).receive("error", (resp) => {
+      display_danger(
+        "Unable to join live session. Seat data will not be update in real time."
+      );
+      console.log(resp);
+    });
+    return channel2;
   }
 
   // js/app.js
