@@ -29,3 +29,5 @@ quokka_quick_seats-*.tar
 *.db
 *.db-*
 
+# Custom folders
+priv/data/seats_backup/

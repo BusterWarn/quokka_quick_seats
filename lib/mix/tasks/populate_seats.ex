@@ -8,6 +8,9 @@ defmodule Mix.Tasks.PopulateSeats do
     # Ensure the application and its dependencies are started
     {:ok, _started_apps} = Application.ensure_all_started(:quokka_quick_seats)
 
+    # Create a backup
+    Mix.Task.run("save_seats_to_json", [])
+
     seats = parse_args(args)
     Enum.each(seats, &DatabaseManager.create_seat/1)
     IO.puts("Database populated with #{Enum.count(seats)} seats.")

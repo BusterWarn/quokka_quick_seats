@@ -27,9 +27,26 @@ Typical steps to set up database are:
 3. **Run Migrations**: `mix ecto.migrate` to apply your migrations and get their database schema in sync with the project.
 
 
+### Save a copy
+
+
+The `save_seats_to_json` task allows you to save the current state of seats in the database to a JSON file.
+
+
+### Specifying a File Path
+
+To run the task and specify the file path where you want the JSON data to be saved. It will save a snapshot of the database in JSON format to `priv\data\seats_backup\seats-yyyy-mm-dd-hh-mm-ssZ.json`
+```
+mix save_seats_to_json
+```
+Alternatively you can point out your own file path:
+```
+mix save_seats_to_json path/to/your/file.json
+```
+
 ### Populate Seats
 
-Seats in database can be populated with a simple text file and a mix task. First create a file with your desired seats: `priv/populate_seats/seats.txt`
+Seats in database can be populated with a simple text file and a mix task. First create a file with your desired seats: `priv/populate_seats/seats.txt`. Note, a backup will be created with the `save_seats_to_json`.
 ```
 A1
 A2
@@ -39,16 +56,14 @@ B2
 B3
 ```
 
-Then run mix task:
+Then run mix task to insert new seats in the database:
 ```shell
 mix populate_seats priv/populate_seats/seats.txt
 ```
 
-This will insert new seats in the database.
-
 ### Unbook all seats
 
-To unbook all seats, run mix task:
+To unbook all seats, run mix task `unbook_seats`. Note, a backup will be created with the `save_seats_to_json`.
 
 ```shell
 mix unbook_seats

@@ -13,6 +13,9 @@ defmodule Mix.Tasks.UnbookSeats do
       # Ensure the application and its dependencies are started
       {:ok, _started_apps} = Application.ensure_all_started(:quokka_quick_seats)
 
+      # Create a backup
+      Mix.Task.run("save_seats_to_json", [])
+
       DatabaseManager.unbook_all_seats()
       IO.puts("All seats unbooked")
     else
