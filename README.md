@@ -1,29 +1,58 @@
 # Quokka Quick Seats
 
+Quokka Quick Seats is a web application designed to manage seat reservations. It uses the Phoenix framework to manage a backend API and a small vanilla js frontend page with real time updating using sockets and [Phoenix channels](https://hexdocs.pm/phoenix/channels.html).
+
 <img src="quokka_quick_seats_icon.png" alt="Icon" height="200px">
-
-## Introduction
-Welcome to the Quokka Quick Seats, a web application designed to manage seat reservations. Whether you're hosting a theatre event, a conference, or any venue with seat allocation, this app streamlines the booking process, making it smooth and efficient for both administrators and end-users.
-
-
-## How it Works
-Users can browse available seats, reserve or cancel a reservation, and get real-time updates on seat availability. Admins can set up seating arrangements, track reservations, and manage users.
 
 ---
 
 # User Documentation
 
+## Preconditions
+- Erlang (24 or later) and Elixir (1.14 or later) ([Docs](https://elixir-lang.org/install.html))
+- Phoenix Framework ([Docs](https://hexdocs.pm/phoenix/installation.html))
+- 4GB RAM recommended
+- SQLite3 ([Docs](https://www.sqlite.org/index.html))
+
 ## Run
 1. mix esbuild default  # Will build the .js files
 2. mix phx.server       # Start the Phoenix server
 
-### Database
+## Database
 
 Typical steps to set up database are:
 
 1. **Run `mix deps.get`**: To fetch all dependencies.
 2. **Set Up the Database**: `mix ecto.create` to create the database.
 3. **Run Migrations**: `mix ecto.migrate` to apply your migrations and get their database schema in sync with the project.
+
+
+### Populate Seats
+
+Seats in database can be populated with a simple text file and a mix task. First create a file with your desired seats: `priv/populate_seats/seats.txt`
+```
+A1
+A2
+A3
+B1
+B2
+B3
+```
+
+Then run mix task:
+```shell
+mix populate_seats priv/populate_seats/seats.txt
+```
+
+This will insert new seats in the database.
+
+### Unbook all seats
+
+To unbook all seats, run mix task:
+
+```shell
+mix unbook_seats
+```
 
 ### Database Documentation and Best Practices
 
@@ -35,9 +64,36 @@ For more detailed information and best practices, you can refer to the official 
 
 These documents provide a wealth of information on using Ecto and Phoenix effectively and are great resources! 🚀👨‍💻📚
 
-### Frontend
 
-First time starting up, frontend assets should be built automatically. To rebuild fronend is quite easy:
+### Some problems with SQLite3 on Windows
+
+On Windows, there can be some problems when first starting up application and SQLite3.
+```shell
+PS quokka_quick_seats> mix.bat ecto.create
+==> exqlite
+process_begin: CreateProcess(NULL, uname -s, ...) failed.
+Makefile:46: pipe: No error
+The syntax of the command is incorrect.
+make: *** [Makefile:145: learning_elixir/phoenix_with_sqlite3/_build/dev/lib/exqlite/priv] Error 1
+could not compile dependency :exqlite, "mix compile" failed. Errors may have been logged above. You can recompile this dependency with "mix deps.compile exqlite --force", update it with "mix deps.update exqlite" or clean it with "mix deps.clean exqlite"
+...
+```
+
+There are fixes for this: [Cannot compile exqlite on Windows](https://stackoverflow.com/questions/69881330/cannot-compile-exqlite-on-windows).
+```shell
+PS quokka_quick_seats> cmd /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+**********************************************************************
+** Visual Studio 2019 Developer Command Prompt v16.11.19
+** Copyright (c) 2021 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x64'
+```
+
+It's also mentioned in the [Exqlite documentation for Windows users](https://github.com/elixir-sqlite/exqlite/blob/main/guides/windows.md).
+
+## Frontend
+
+First time starting up, frontend assets should be built automatically. To rebuild frontend is quite easy:
 ```shell
 quokka_quick_seats> mix esbuild default
 
@@ -54,120 +110,3 @@ To remove all static assets run:
 mix phx.digest.clean --all
 ```
 
-# Tech Stack
-
-### Backend: Elixir + Phoenix
-
-#### What it Does
-Handles logic, data, and real-time updates.
-
-#### Why We Picked It
-Elixir and Phoenix excel in real-time, scalability, and reliability.
-
-#### Preconditions
-- Erlang (24 or later) and Elixir (1.14 or later) ([Docs](https://elixir-lang.org/install.html))
-- Phoenix Framework ([Docs](https://hexdocs.pm/phoenix/installation.html))
-- 4GB RAM recommended
-
-#### Logging
-- Built-in Logger utility for Elixir and Phoenix
-- No need for separate logging tools
-
----
-
-### Frontend option 1: Svelte
-
-#### What it Does
-User interface.
-
-#### Why We Picked It
-Svelte is lightweight and offers reactive programming. 
-
-#### Preconditions
-- Node.js v14+ installed ([Docs](https://svelte.dev/tutorial/basics))
-- 2GB RAM minimum
-
-### Frontend option 2: Alpine.js
-
-#### What it Does
-User interface.
-
-#### Why We Picked It
-Alpine.js is small, and focuses on sprinkling in behavior.
-
-#### Preconditions
-- Node.js v14+ ([Docs](https://alpinejs.dev/start-here))
-- 2GB RAM minimum
-
-### Other Frontend Options
-
-#### VanillaJS
-
-- **What it Does**: Pure JavaScript interface.
-- **Why We Picked It**: Zero dependencies, extremely lightweight.
-- **Preconditions**: None
-
-#### jQuery
-
-- **What it Does**: DOM manipulation and event handling.
-- **Why We Picked It**: Simple, just include via CDN.
-- **Preconditions**: None
-
-#### Mithril.js
-
-- **What it Does**: Small, fast JavaScript framework.
-- **Why We Picked It**: Lightweight, can include via CDN.
-- **Preconditions**: None
-- **Docs**: https://mithril.js.org/
-
-#### Vue.js
-
-- **What it Does**: Reactive UI library.
-- **Why We Picked It**: Can be included via CDN, but optimized for Node.js.
-- **Preconditions**: None if CDN is used
-
----
-
-### Database: SQLite
-
-#### What it Does
-Stores data related to seats, reservations, and users.
-
-#### Why We Picked It
-SQLite is lightweight and easy to set up.
-
-#### Preconditions
-- SQLite installed ([Docs](https://sqlite.org/docs.html))
-- 100MB Disk Space
-
----
-
-### Additional Features
-
-#### GraphQL
-
-- **What it Does**: Allows flexible and efficient data queries.
-- **Why We Picked It**: Reduces over-fetching and under-fetching. ([Docs](https://graphql.org/))
-- **Absinthe** is an Elixir framework for working with GraphQL: https://hexdocs.pm/absinthe/overview.html
-
-#### Testing and Mocking
-
-- **What it Does**: Verifies code functionality; simulates real systems.
-- **Why We Picked It**: ExUnit for Elixir ([ExUnit Docs](https://hexdocs.pm/ex_unit/ExUnit.html)); Jest/Mocha for frontend ([Jest Docs](https://jestjs.io/docs/getting-started)); Mox for mocking ([Mox Docs](https://hexdocs.pm/mox/Mox.html))
-  
----
-
-### Git and CI
-
-- **What it Does**: Automates testing and deployment.
-- **Why We Picked It**: GitHub Actions ([Docs](https://docs.github.com/en/actions)); Git hooks for linting through Credo
-
----
-
-### Deploy Strategy
-
-- **Method**: Simple Git pull on the server.
-- **Why We Picked It**: Easy to set up, no need for heavy-duty tools like Kubernetes.
-- **Preconditions**: Git installed on the server; exclude test code and Node.js if not needed.
-
----
