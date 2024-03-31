@@ -2,12 +2,12 @@ defmodule Mix.Tasks.PopulateSeats do
   use Mix.Task
   alias QuokkaQuickSeats.DatabaseManager
 
-  @shortdoc "Populates the database with seats from a list in a TXT file or JSON file."
+  @shortdoc "Populates the database with seats from a list in a TXT file or JSON file. Deletes and backups before."
   def run(args) do
     {:ok, _started_apps} = Application.ensure_all_started(:quokka_quick_seats)
 
-    # Create a backup before populating
-    Mix.Task.run("save_seats_to_json", [])
+    # Delete all seats and create a backup before
+    Mix.Task.run("delete_all_seats", [])
 
     seats = parse_args(args)
     Enum.each(seats, &DatabaseManager.create_seat/1)
