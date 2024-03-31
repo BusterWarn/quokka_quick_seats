@@ -61,6 +61,19 @@ Then run mix task to insert new seats in the database:
 mix populate_seats priv/populate_seats/seats.txt
 ```
 
+It is also possible to load a database from a json file. This is an example of the previous `seats.txt` backed up as `priv/data/seats_backup/backup.json`:
+
+```json
+[
+  {"seat_id": "A1", "is_booked": false, "full_name": null, "phone_number": null},
+  {"seat_id": "A2", "is_booked": false, "full_name": null, "phone_number": null},
+  {"seat_id": "A3", "is_booked": false, "full_name": null, "phone_number": null},
+  {"seat_id": "B1", "is_booked": false, "full_name": null, "phone_number": null},
+  {"seat_id": "B2", "is_booked": false, "full_name": null, "phone_number": null},
+  {"seat_id": "B3", "is_booked": false, "full_name": null, "phone_number":null}
+]
+```
+
 ### Unbook all seats
 
 To unbook all seats, run mix task `unbook_seats`. Note, a backup will be created with the `save_seats_to_json`.
