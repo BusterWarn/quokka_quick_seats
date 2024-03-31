@@ -3,7 +3,7 @@ defmodule Mix.Tasks.UnbookSeats do
 
   alias QuokkaQuickSeats.DatabaseManager
 
-  @shortdoc "Unbooks all seats in the database"
+  @shortdoc "Unbooks all seats in the database. Creates a backup before."
 
   def run(_args) do
     IO.puts("Are you sure you want to unbook all seats? (type 'C' to confirm)")
